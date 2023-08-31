@@ -21,8 +21,16 @@ module.exports = (client) => {
       }
     }
 
-    const clientID = "1103774194401017866";
-    const guildID = "1072593406565552148";
+    const clientID = "1146840375303077969";
+    const guildID = "1092050265563222106";
     const rest = new REST({ version: "9" }).setToken(process.env.token);
+
+    try {
+      console.log("Started refreshing applcation (/) commands.");
+
+      await rest.put(Routes.applicationGuildCommands(clientID, guildID), {
+        body: client.commandsArray,
+      });
+    } catch (error) {}
   };
 };

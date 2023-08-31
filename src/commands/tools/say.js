@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,7 +15,7 @@ module.exports = {
 
   async execute(interaction, client) {
     try {
-      let messageToSay = options.getString("message");
+      let messageToSay = interaction.options.getString("message");
       await interaction.channel.send(messageToSay);
       interaction.reply({ content: "Message Sent", ephemeral: true });
     } catch (error) {
