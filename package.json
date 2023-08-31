@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/bot.js",
   "scripts": {
-    "test": "node ."
+    "start": "node ."
   },
   "keywords": [],
   "author": "David Ilie Raul",
