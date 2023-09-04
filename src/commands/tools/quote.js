@@ -20,9 +20,11 @@ module.exports = {
       const quote = await getQuote();
       await interaction.reply(quote);
     } catch (error) {
-      await interaction.reply(
-        "Invalid age provided. Please provide a valid integer."
-      );
+      await interaction.reply({
+        content:
+          "Sorry, An error has occurred with displaying a quote, please try again later!",
+        ephemeral: true,
+      });
     }
   },
 };

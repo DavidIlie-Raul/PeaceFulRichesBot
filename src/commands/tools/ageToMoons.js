@@ -34,9 +34,11 @@ module.exports = {
       const moonsOld = getAgeInMoons(age);
       await interaction.reply(`You have lived through ${moonsOld} full moons!`);
     } catch (error) {
-      await interaction.reply(
-        "Invalid age provided. Please provide a valid integer."
-      );
+      await interaction.reply({
+        content:
+          "Invalid age provided. Please provide a valid integer (eg. 60, 24, 53).",
+        ephemeral: true,
+      });
     }
   },
 };

@@ -19,9 +19,10 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      await interaction.reply(
-        "BotHelp could not be displayed, sorry for the inconvenience!"
-      );
+      await interaction.reply({
+        content: "BotHelp could not be displayed, sorry for the inconvenience!",
+        ephemeral: true,
+      });
     }
   },
 };
