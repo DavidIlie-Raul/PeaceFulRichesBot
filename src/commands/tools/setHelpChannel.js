@@ -17,18 +17,18 @@ module.exports = {
   async execute(interaction, client) {
     function updateTargetChannel(serverId, channelId) {
       try {
-        const data = fs.readFileSync("./src/helpmeTarget.json", "utf8");
+        const data = fs.readFileSync("./src/StoredData.json", "utf8");
         const jsonData = JSON.parse(data);
         jsonData.targetServerId = serverId;
         jsonData.targetChannelId = channelId;
         fs.writeFileSync(
-          "./src/helpmeTarget.json",
+          "./src/StoredData.json",
           JSON.stringify(jsonData, null, 2)
         );
-        console.log("Updated target channel ID in helpmeTarget.json");
+        console.log("Updated target channel ID in StoredData.json");
       } catch (error) {
         console.error(
-          "Failed to update target channel ID in helpmeTarget.json:",
+          "Failed to update target channel ID in StoredData.json:",
           error
         );
       }

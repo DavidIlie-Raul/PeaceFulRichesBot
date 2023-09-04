@@ -9,12 +9,12 @@ module.exports = {
   async execute(interaction, client) {
     function readTargetServerId() {
       try {
-        const data = fs.readFileSync("./src/helpmeTarget.json", "utf8");
+        const data = fs.readFileSync("./src/StoredData.json", "utf8");
         const jsonData = JSON.parse(data);
         return jsonData.targetServerId;
       } catch (error) {
         console.error(
-          "Failed to read target server ID from helpmeTarget.json:",
+          "Failed to read target server ID from StoredData.json:",
           error
         );
         return null;
@@ -24,7 +24,7 @@ module.exports = {
     // Helper function to read the target channel ID from the JSON file
     function readTargetChannelId() {
       try {
-        const data = fs.readFileSync("./src/helpmeTarget.json", "utf8");
+        const data = fs.readFileSync("./src/StoredData.json", "utf8");
         const jsonData = JSON.parse(data);
         return jsonData.targetChannelId;
       } catch (error) {
