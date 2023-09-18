@@ -1,30 +1,42 @@
 const axios = require("axios");
+const dotenv = require("dotenv");
 
 module.exports = async (name, email) => {
-  const MCAPIKEY = process.env.mc_api_key;
+  dotenv.config();
+  let zohoAccessToken = process.env.zoho_access_token;
+
+  let contactinfo = {
+    "First Name": name,
+    "Last Name": "Last Name",
+    "Contact Email": email,
+  };
+
+  let encodedContactInfo = encodeURIComponent(JSON.stringify(contactinfo));
+
+  const urlElements = {
+    resfmt: "JSON",
+    listkey: process.env.zoho_list_key,
+    contactinfo: encodedContactInfo,
+  };
 
   try {
+    console.log(
+      `https://campaigns.zoho.eu/api/v1.1/json/listsubscribe?resfmt=${urlElements.resfmt}&listkey=${urlElements.listkey}&contactinfo=${urlElements.contactinfo}`
+    );
     const response = await axios.post(
-      "https://us14.api.mailchimp.com/3.0/lists/7cd9e26a69/members",
+      `https://campaigns.zoho.eu/api/v1.1/json/listsubscribe?resfmt=${urlElements.resfmt}&listkey=${urlElements.listkey}&contactinfo=${urlElements.contactinfo}`,
+      null,
       {
-        email_address: email,
-        status: "subscribed",
-        merge_fields: {
-          FNAME: name,
-        },
-      },
-      {
-        auth: {
-          username: "apikey",
-          password: MCAPIKEY,
+        headers: {
+          Authorization: `Bearer ${zohoAccessToken}`,
+          "Content-Type": "application/x-www-form-urlencoded",
         },
       }
     );
 
-    console.log("Email added to Mailchimp:", response.data);
     return response.data;
   } catch (error) {
-    console.log("Error adding email to Mailchimp:", error.response.data);
-    throw error;
+    console.log("subscribing a user to zoho has failed", error.response.data);
+    return "An error occurred. Please try again later.";
   }
 };

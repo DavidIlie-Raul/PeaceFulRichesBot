@@ -1,4 +1,4 @@
-const addToMailchimp = require("../../utils/handleMailSub.js");
+const addToMailList = require("../../utils/handleMailSub.js");
 const handleButtonInteraction = require("../../utils/handleButton.js");
 
 module.exports = {
@@ -41,17 +41,33 @@ module.exports = {
           return;
         }
 
-        const response = await addToMailchimp(name, email);
-        console.log("Mailchimp response:", response); // Log the entire response object
+        const response = await addToMailList(name, email);
+        console.log("MailList(zoho) response:", response); // Log the entire response object
         const user = interaction.user;
-        if (response.status === "subscribed") {
+        if (
+          response.code === "200" ||
+          (response.code === "0" &&
+            response.message === "User successfully subscribed.")
+        ) {
           await interaction.reply({
             content: `${user} You have successfully subscribed to the Peaceful Riches Newsletter! Thank you!`,
             ephemeral: true,
           });
-        } else if (response.status === "unsubscribed") {
+        } else if (
+          response.code === "0" &&
+          response.message ===
+            "This email address already exists in the list. However, any additional information will be updated in the existing contact."
+        ) {
           await interaction.reply({
-            content: `${user}You have successfully unsubscribed from the Peaceful Riches Newsletter!`,
+            content: `${user} The Email you have provided is already signed up. Thank you!`,
+            ephemeral: true,
+          });
+        } else if (
+          response.code === "2007" &&
+          response.message === "Invalid Contact Email address."
+        ) {
+          await interaction.reply({
+            content: `${user} The Email you have provided is invalid. Please try again!`,
             ephemeral: true,
           });
         } else {
@@ -61,32 +77,22 @@ module.exports = {
           });
         }
       } catch (error) {
-        console.error("Error submitting data to Mailchimp:", error);
-        console.log("Error details:", error.response.data); // Log the error details
+        console.error("Error submitting data to MailingList(zoho):", error);
+        console.log("Error details:", error.response); // Log the error details
 
         let errorMessage;
 
         if (
           error.response &&
           error.response.data &&
-          error.response.data.title
+          error.response.data.message
         ) {
-          const errorTitle = error.response.data.title;
+          const errorCode = error.response?.data?.code;
+          const errorMessage = error.response?.data?.message;
 
-          switch (errorTitle) {
-            case "Member Exists":
-              errorMessage =
-                "You are already subscribed to the newsletter, thank you!";
-              break;
-            case "Invalid Resource":
-              errorMessage =
-                "The Email you have entered looks fake or invalid, please enter a real email address.";
-              break;
-            // Add more cases for different error titles as needed
-
-            default:
-              // No specific error message found
-              break;
+          if (errorCode === "2007") {
+            errorMessage =
+              "You have provided an invalid Email, please try again!";
           }
         }
 
