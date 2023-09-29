@@ -1,4 +1,4 @@
-const addToMailchimp = require("../../utils/handleMailSub.js");
+const addToMailList = require("../../utils/handleMailSub.js");
 const handleButtonInteraction = require("../../utils/handleButton.js");
 
 module.exports = {
@@ -41,67 +41,43 @@ module.exports = {
           return;
         }
 
-        const response = await addToMailchimp(name, email);
-        console.log("Mailchimp response:", response); // Log the entire response object
+        const response = await addToMailList(name, email);
+        console.log(response?.data);
         const user = interaction.user;
-        if (response.status === "subscribed") {
-          await interaction.reply({
-            content: `${user} You have successfully subscribed to the Peaceful Riches Newsletter! Thank you!`,
-            ephemeral: true,
-          });
-        } else if (response.status === "unsubscribed") {
-          await interaction.reply({
-            content: `${user}You have successfully unsubscribed from the Peaceful Riches Newsletter!`,
-            ephemeral: true,
-          });
-        } else {
-          await interaction.reply({
-            content: ` Sorry, ${user}! The subscription has failed! Please try again later!`,
-            ephemeral: true,
-          });
-        }
-      } catch (error) {
-        console.error("Error submitting data to Mailchimp:", error);
-        console.log("Error details:", error.response.data); // Log the error details
-
-        let errorMessage;
 
         if (
-          error.response &&
-          error.response.data &&
-          error.response.data.title
+          response?.message &&
+          response?.message === "E-mail already exists."
         ) {
-          const errorTitle = error.response.data.title;
-
-          switch (errorTitle) {
-            case "Member Exists":
-              errorMessage =
-                "You are already subscribed to the newsletter, thank you!";
-              break;
-            case "Invalid Resource":
-              errorMessage =
-                "The Email you have entered looks fake or invalid, please enter a real email address.";
-              break;
-            // Add more cases for different error titles as needed
-
-            default:
-              // No specific error message found
-              break;
-          }
-        }
-
-        if (errorMessage) {
-          const user = interaction.user;
           await interaction.reply({
-            content: `${user} ${errorMessage}`,
+            content: `${user}, The Email address you have provided is already registered! Thank you!`,
             ephemeral: true,
           });
+          return;
+        } else if (
+          response?.data?.uuid &&
+          response?.data?.created_at &&
+          response?.data?.status
+        ) {
+          await interaction.reply({
+            content: `${user}, You have successfully registered! Thanks!`,
+            ephemeral: true,
+          });
+          return;
         } else {
           await interaction.reply({
-            content: "An error occurred. Please try again later.",
+            content: `${user}, An unexpected error occured while trying to sign you up! Please try again later, or contact tech support`,
             ephemeral: true,
           });
+
+          return;
         }
+      } catch (error) {
+        console.log("Registering email to list has failed" + error);
+        await interaction.reply({
+          content: `${user}, An unexpected error occured while trying to sign you up! Please try again later, or contact tech support`,
+          ephemeral: true,
+        });
       }
     }
   },

@@ -1,30 +1,44 @@
 const axios = require("axios");
 
 module.exports = async (name, email) => {
-  const MCAPIKEY = process.env.mc_api_key;
+  const lmUser = process.env.lm_user;
+  const lmPass = process.env.lm_pass;
+  const serverMailEndpoint = "http://88.80.188.245:9000/api/subscribers";
+
+  console.log("trying to register a new user");
+
+  console.log(
+    "trying to auth to listmonk with: User" + lmUser + " Pass: " + lmPass
+  );
 
   try {
     const response = await axios.post(
-      "https://us14.api.mailchimp.com/3.0/lists/7cd9e26a69/members",
+      serverMailEndpoint,
       {
-        email_address: email,
-        status: "subscribed",
-        merge_fields: {
-          FNAME: name,
-        },
+        email: email,
+        name: name,
+        status: "enabled",
+        lists: [3, 4],
+        preconfirm_subscriptions: true,
       },
       {
-        auth: {
-          username: "apikey",
-          password: MCAPIKEY,
-        },
+        auth: { username: lmUser, password: lmPass },
       }
     );
 
-    console.log("Email added to Mailchimp:", response.data);
+    // Handle the response data here, e.g., log it
+    console.log("Response from server:", response.data);
     return response.data;
   } catch (error) {
-    console.log("Error adding email to Mailchimp:", error.response.data);
-    throw error;
+    if (error.response) {
+      console.log(
+        "POST failed, could not register a new mail to the mail list:",
+        error.response.data
+      );
+      return error.response.data;
+    } else {
+      console.error("An error occurred:", error.message);
+      return error;
+    }
   }
 };
