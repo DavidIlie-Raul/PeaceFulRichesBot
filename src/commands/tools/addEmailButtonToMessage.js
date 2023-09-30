@@ -30,40 +30,45 @@ module.exports = {
     try {
       const messageLink = interaction.options.getString("message_link");
       if (!messageLink) {
-        return interaction.reply(
-          "Invalid message link. Please provide a valid message link."
-        );
+        return interaction.reply({
+          content: `${user}, Invalid or missing message link. Please provide a valid message link.`,
+          ephemeral: true,
+        });
       }
 
       // Extract the guild ID, channel ID, and message ID from the message link
       const match = messageLink.match(/channels\/(\d+)\/(\d+)\/(\d+)/);
       if (!match) {
-        return interaction.reply(
-          "Invalid message link format. Please provide a valid message link."
-        );
+        return interaction.reply({
+          content: `${user}, Invalid message link format. Please provide a valid message link.`,
+          ephemeral: true,
+        });
       }
 
       const [_, guildId, channelId, messageId] = match;
 
       const targetGuild = client.guilds.cache.get(guildId);
       if (!targetGuild) {
-        return interaction.reply(
-          "Target guild not found. Please provide a valid message link."
-        );
+        return interaction.reply({
+          content: `${user}, Target guild not found. Please provide a valid message link.`,
+          ephemeral: true,
+        });
       }
 
       const targetChannel = targetGuild.channels.cache.get(channelId);
       if (!targetChannel) {
-        return interaction.reply(
-          "Target channel not found. Please provide a valid message link."
-        );
+        return interaction.reply({
+          content: `${user}, Target channel not found. Please provide a valid message link.`,
+          ephemeral: true,
+        });
       }
 
       const targetMessage = await targetChannel.messages.fetch(messageId);
       if (!targetMessage) {
-        return interaction.reply(
-          "Target message not found. Please provide a valid message link."
-        );
+        return interaction.reply({
+          content: `${user}, Target message not found. Please provide a valid message link.`,
+          ephemeral: true,
+        });
       }
 
       const row = new ActionRowBuilder().addComponents(
@@ -84,14 +89,17 @@ module.exports = {
       });
 
       // Respond to the interaction after processing is complete
-      await interaction.editReply(
-        "Button added successfully to the targeted message."
-      );
+      await interaction.editReply({
+        content: "Button added successfully to the targeted message.",
+        ephemeral: true,
+      });
     } catch (error) {
       console.log(error);
-      await interaction.editReply(
-        "An error has occurred while adding the button. Please contact Tech Support!"
-      );
+      await interaction.editReply({
+        content:
+          "An error has occurred while adding the button. Please contact Tech Support!",
+        ephemeral: true,
+      });
     }
   },
 };
