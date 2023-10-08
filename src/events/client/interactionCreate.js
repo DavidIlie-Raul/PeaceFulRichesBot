@@ -42,22 +42,17 @@ module.exports = {
         }
 
         const response = await addToMailList(name, email);
-        console.log(response?.data);
+        console.log(response?.response_message);
         const user = interaction.user;
 
-        if (
-          response?.message &&
-          response?.message === "E-mail already exists."
-        ) {
+        if (response?.response_message === "Your Email is already registered") {
           await interaction.reply({
             content: `${user}, The Email address you have provided is already registered! Thank you!`,
             ephemeral: true,
           });
           return;
         } else if (
-          response?.data?.uuid &&
-          response?.data?.created_at &&
-          response?.data?.status
+          response?.response_message === "User successfully registered"
         ) {
           await interaction.reply({
             content: `${user}, You have successfully registered! Thanks!`,

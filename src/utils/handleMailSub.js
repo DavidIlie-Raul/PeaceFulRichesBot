@@ -3,28 +3,21 @@ const axios = require("axios");
 module.exports = async (name, email) => {
   const lmUser = process.env.lm_user;
   const lmPass = process.env.lm_pass;
-  const serverMailEndpoint = "http://88.80.188.245:9000/api/subscribers";
+  const serverMailEndpoint = "http://peacefulriches.com:9001/maildata";
 
   console.log("trying to register a new user");
 
   console.log(
-    "trying to auth to listmonk with: User" + lmUser + " Pass: " + lmPass
+    "Sending data over to Proxy Server: User" + lmUser + " Pass: " + lmPass
   );
 
   try {
-    const response = await axios.post(
-      serverMailEndpoint,
-      {
-        email: email,
-        name: name,
-        status: "enabled",
-        lists: [3, 4],
-        preconfirm_subscriptions: true,
-      },
-      {
-        auth: { username: lmUser, password: lmPass },
-      }
-    );
+    const response = await axios.post(serverMailEndpoint, {
+      email: email,
+      name: name,
+      status: "enabled",
+      lists: [3, 4],
+    });
 
     // Handle the response data here, e.g., log it
     console.log("Response from server:", response.data);
