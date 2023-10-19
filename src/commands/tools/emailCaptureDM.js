@@ -156,6 +156,7 @@ module.exports = {
     if (isUsingLinkAsMessage === true) {
       try {
         messageObjectToSend = await retrieveMessageFromlink(messageLink);
+        console.log(messageObjectToSend);
       } catch (error) {
         console.error(error);
         // Reply with an ephemeral error message for message link processing
@@ -174,15 +175,22 @@ module.exports = {
     const guildMembers = Array.from(interaction.guild.members.cache);
 
     // Define the rate limit parameters
-    const messagesPerMinute = 50; // Maximum number of messages per minute
+    const messagesPerMinute = 10; // Maximum number of messages per minute
     const interval = 60000 / messagesPerMinute; // Interval between each message in milliseconds
 
     // Iterate over each member and send the message with the row component
     for (const [index, guildMember] of guildMembers.entries()) {
       setTimeout(async () => {
         try {
+          // Clone the original messageObjectToSend to avoid affecting other users
+          const personalizedMessage = { ...messageObjectToSend };
+          // Add "Hello [username]" to the message content
+          personalizedMessage.content =
+            `Hello <@${guildMember[1].user.id}>, ` +
+            personalizedMessage.content;
+
           // Send the message with the row component
-          await guildMember[1].send(messageObjectToSend);
+          await guildMember[1].send(personalizedMessage);
           console.log(
             "Successfully sent a message to member " + guildMember[1].user.tag
           );
@@ -192,7 +200,7 @@ module.exports = {
           console.error(
             "Failed to send DM to member " + guildMember[1].user.tag
           );
-          console.error(error); // Log the specific error
+          console.error(error);
         }
 
         // Check if it's the last member or if the interval has passed
