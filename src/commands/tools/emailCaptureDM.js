@@ -171,6 +171,8 @@ module.exports = {
       messageObjectToSend = { content: formattedMessage, components: [row] };
     }
 
+    //Fetch the latest version of all guild members
+    await interaction.guild.members.fetch();
     // Fetch all members of the guild
     const guildMembers = Array.from(interaction.guild.members.cache);
 
