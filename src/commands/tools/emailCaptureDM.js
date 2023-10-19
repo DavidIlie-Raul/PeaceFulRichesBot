@@ -175,7 +175,7 @@ module.exports = {
     const guildMembers = Array.from(interaction.guild.members.cache);
 
     // Define the rate limit parameters
-    const messagesPerMinute = 10; // Maximum number of messages per minute
+    const messagesPerMinute = 20; // Maximum number of messages per minute
     const interval = 60000 / messagesPerMinute; // Interval between each message in milliseconds
 
     // Iterate over each member and send the message with the row component
