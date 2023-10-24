@@ -32,4 +32,7 @@ for (const folder of functionFolders) {
 connect();
 client.handleEvents();
 client.handleCommands();
+client.dbChecking("On");
 client.login(token);
+
+module.exports = { client };
