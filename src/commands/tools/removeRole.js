@@ -16,7 +16,9 @@ module.exports = {
         .setName("target-member")
         .setDescription("The Member you want to remove the role from.")
         .setRequired(true)
-    ),
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDMPermission(false),
 
   async execute(interaction, client) {
     //Get the target role and member from the command options

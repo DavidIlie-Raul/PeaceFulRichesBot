@@ -25,7 +25,9 @@ module.exports = {
         )
         .setMaxValue(24)
         .setMinValue(1)
-    ),
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDMPermission(false),
 
   async execute(interaction, client) {
     //Get the target role and member from the command options
