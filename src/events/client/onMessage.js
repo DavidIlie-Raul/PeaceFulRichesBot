@@ -57,7 +57,7 @@ module.exports = {
     if (isChannelValid) {
       const thread = await message.startThread({
         name: `Reply to ${message.author.username}`,
-        autoArchiveDuration: 1440,
+        autoArchiveDuration: 60,
         reason: "Reply",
       });
       await thread.setArchived(true);
