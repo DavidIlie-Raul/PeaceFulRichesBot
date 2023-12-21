@@ -2,3 +2,4 @@
 /node_modules
 /src/helpmeTarget.json
 src/StoredData.json
+package-lock.json

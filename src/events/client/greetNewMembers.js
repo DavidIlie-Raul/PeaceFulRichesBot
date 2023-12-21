@@ -5,6 +5,7 @@ module.exports = {
   name: "guildMemberAdd",
 
   async execute(member) {
+    console.log("a member joined");
     const storedDataFile = fs.readFileSync("src/StoredData.json", "utf-8");
     const dataFromLocalStorage = JSON.parse(storedDataFile);
 
@@ -58,7 +59,7 @@ module.exports = {
       }
 
       messageObjectToSend = {
-        content: `Welcome to the ${member.guild.name} server, <@!${member.id}>! ${targetMessage.content}`,
+        content: `Hey, <@!${member.id}>! ${targetMessage.content}`,
         embeds: targetMessage.embeds,
         files: targetMessage.attachments.map((attachment) => attachment.url),
       };
@@ -79,8 +80,9 @@ module.exports = {
     }
 
     const user = member.user;
-    user.send(messageObjectToSend).catch((error) => {
+    await user.send(messageObjectToSend).catch((error) => {
       console.error(`Failed to send DM to ${user.tag}: ${error}`);
     });
+    console.log("sent a message to welcome");
   },
 };

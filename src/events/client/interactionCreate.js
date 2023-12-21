@@ -69,6 +69,7 @@ module.exports = {
         }
       } catch (error) {
         console.log("Registering email to list has failed" + error);
+        const user = interaction.user;
         await interaction.reply({
           content: `${user}, An unexpected error occured while trying to sign you up! Please try again later, or contact tech support`,
           ephemeral: true,
